@@ -124,20 +124,70 @@ Create a Ruby application that scrapes articles from TLDR Tech (tldr.tech) and g
    export GMAIL_APP_PASSWORD=your-app-specific-password
    ```
 
-2. The EPUB should have this structure:
+2. TLDR Tech Scraping Guide:
+   - Base URL: https://tldr.tech
+   - Categories:
+     * Tech: /tech
+     * AI: /ai
+     * InfoSec: /infosec
+   
+   HTML Structure:
+   ```html
+   <article class="mt-3">
+     <a class="font-bold" href="[source_url]?utm_source=tldrnewsletter">
+       <h3>[article_title] ([read_time])</h3>
+     </a>
+     <div class="newsletter-html">
+       [article_content]
+     </div>
+   </article>
+   ```
+
+   Date Format in URL:
+   - Format: YYYY-MM-DD
+   - Example: https://tldr.tech/tech/2025-01-10
+
+   Expected Article Data:
+   ```ruby
+   {
+     title: "Article Title",  # Need to remove read time in parentheses
+     content: "Article summary text",
+     category: "tech|ai|infosec",
+     url: "https://original.article.url"  # UTM parameters need to be removed
+   }
+   ```
+
+   Notes:
+   - Title includes read time in parentheses that needs to be removed
+   - The source URL needs UTM parameters removed (split on '?')
+   - Text needs HTML entities decoded (use CGI.unescapeHTML)
+   - Handle empty responses gracefully
+   - Each category is scraped separately
+   - The h3 is nested inside the anchor tag
+
+   Error Cases to Handle:
+   - Invalid/future dates
+   - Empty category pages
+   - Network timeouts
+   - Rate limiting
+   - Changed HTML structure
+   - Missing read time in title
+   - Missing UTM parameters
+
+3. The EPUB should have this structure:
    - Cover page with date
    - Table of contents by category
    - Articles organized by category
    - Clickable titles linking to source
 
-3. Both HTML email and EPUB should have clean, modern styling with:
+4. Both HTML email and EPUB should have clean, modern styling with:
    - Sans-serif fonts
    - Good spacing
    - Clear hierarchy
    - Readable text size
    - Proper margins
 
-4. Progress messages should be:
+5. Progress messages should be:
    - Clear and concise
    - Show relative paths
    - Include emoji indicators
