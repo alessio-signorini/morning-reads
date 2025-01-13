@@ -50,18 +50,37 @@ Create a Ruby application that scrapes articles from TLDR Tech (tldr.tech) and g
    │   │   └── tldr_scraper.rb
    │   ├── epub_builder.rb
    │   └── email_sender.rb
-   └── .env
+   ├── notes/
+   │   └── prompt.md
+   └── .env.example
    ```
 
 2. Dependencies:
-   - nokogiri
-   - httparty
-   - gepub
-   - mail
-   - sinatra
-   - dotenv
+   ```ruby
+   source 'https://rubygems.org'
+   
+   ruby '3.2.2'
+   
+   gem 'nokogiri'
+   gem 'httparty'
+   gem 'gepub'
+   gem 'mail'
+   gem 'rake'
+   gem 'rackup'
+   gem 'sinatra'
+   gem 'puma'
+   
+   group :development, :test do
+     gem 'dotenv'
+   end
+   ```
 
-3. Progress Indicators:
+3. Environment Configuration:
+   - Development/Test: Load configuration from .env file
+   - Production: Use system environment variables
+   - Set RACK_ENV appropriately for each environment
+
+4. Progress Indicators:
    Show clean progress with emoji:
    ```
    📥 Scraping TLDR articles...
@@ -76,25 +95,34 @@ Create a Ruby application that scrapes articles from TLDR Tech (tldr.tech) and g
    ✨ All done! Your morning reads have been generated and sent.
    ```
 
-4. Error Handling:
+5. Error Handling:
    - Invalid dates
    - Network failures
    - Email sending issues
    - File system errors
    - XML parsing errors
 
-5. Code Style:
-   - Clean, modular code
-   - Proper error handling
-   - Clear progress messages
-   - Consistent formatting
-   - Good documentation
+## Code Style Requirements
+
+1. Clean, modular code organization
+2. Proper error handling with descriptive messages
+3. Clear progress indicators
+4. Consistent formatting
+5. Good documentation
+6. Environment-aware configuration
 
 ## Additional Notes
 
-1. The email sender should use environment variables:
-   - GMAIL_USERNAME
-   - GMAIL_APP_PASSWORD
+1. Environment Variables:
+   ```bash
+   # Development (.env file)
+   GMAIL_USERNAME=your.email@gmail.com
+   GMAIL_APP_PASSWORD=your-app-specific-password
+   
+   # Production (set in deployment platform)
+   export GMAIL_USERNAME=your.email@gmail.com
+   export GMAIL_APP_PASSWORD=your-app-specific-password
+   ```
 
 2. The EPUB should have this structure:
    - Cover page with date
@@ -115,4 +143,4 @@ Create a Ruby application that scrapes articles from TLDR Tech (tldr.tech) and g
    - Include emoji indicators
    - Show success/error clearly
 
-Please implement this project following all the requirements above. The code should be production-ready, well-documented, and handle all error cases gracefully.
+Please implement this project following all the requirements above. The code should be production-ready, well-documented, and handle all error cases gracefully. Remember to properly handle environment-specific configurations.

@@ -24,11 +24,15 @@ cd morning-reads
 bundle install
 ```
 
-3. Set up environment variables in `.env`:
+3. Set up environment variables:
+
+For development and testing, create a `.env` file:
 ```bash
 GMAIL_USERNAME=your.email@gmail.com
 GMAIL_APP_PASSWORD=your-app-specific-password
 ```
+
+For production, set these environment variables directly in your deployment platform.
 
 Note: You'll need to create an App Password in your Google Account settings. Never use your regular Gmail password.
 
@@ -70,8 +74,14 @@ Examples:
 
 Start the server:
 ```bash
-rake server
+# Development
+RACK_ENV=development rake server
+
+# Production
+RACK_ENV=production rake server
 ```
+
+The server will be available at `http://localhost:3000`.
 
 Generate and send digest:
 ```bash
@@ -103,12 +113,16 @@ curl "http://localhost:3000/generate?email=user@email.com"
 
 ## Development 🔧
 
-Run the web server:
-```bash
-rake server
-```
+The application uses different configurations based on the environment:
 
-The server will be available at `http://localhost:3000`.
+- **Development/Test**: Uses `.env` file for configuration
+- **Production**: Uses system environment variables
+
+Set the environment using `RACK_ENV`:
+```bash
+RACK_ENV=development # Uses .env file
+RACK_ENV=production  # Uses system environment variables
+```
 
 ## Error Handling ⚠️
 
