@@ -1,7 +1,6 @@
 require 'sinatra'
-require 'sinatra/json'
 require 'date'
-require 'dotenv/load'
+require 'json'
 require_relative 'lib/scrapers/tldr_scraper'
 require_relative 'lib/epub_builder'
 require_relative 'lib/email_sender'
@@ -27,7 +26,7 @@ class MorningReadsApp < Sinatra::Base
       articles = scraper.scrape_all(date_str)
       
       if articles.empty?
-        return json(error: "No articles found for #{date_str}")
+        return { error: "No articles found for #{date_str}" }.to_json
       end
       
       # Generate EPUB
@@ -38,7 +37,7 @@ class MorningReadsApp < Sinatra::Base
       email_sender = EmailSender.new
       email_sender.send_epub(epub_file, date_str, email, articles)
       
-      json(
+      {
         success: true,
         message: "Morning reads for #{date_str} sent to #{email}",
         stats: {
@@ -46,13 +45,13 @@ class MorningReadsApp < Sinatra::Base
           articles_count: articles.length,
           categories: articles.group_by { |a| a[:category] }.transform_values(&:count)
         }
-      )
+      }.to_json
     rescue Date::Error
       status 400
-      json(error: "Invalid date format. Please use YYYY-MM-DD")
+      { error: "Invalid date format. Please use YYYY-MM-DD" }.to_json
     rescue => e
       status 500
-      json(error: e.message)
+      { error: e.message }.to_json
     end
   end
 end
