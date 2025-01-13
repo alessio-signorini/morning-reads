@@ -1,45 +1,140 @@
-# Morning Reads
+# Morning Reads 📚
 
-A Ruby application that scrapes TLDR articles, creates an EPUB file, and emails it daily.
+A Ruby application that generates a daily digest of TLDR Tech articles in both EPUB and email formats. Articles are scraped from [tldr.tech](https://tldr.tech) across tech, AI, and infosec categories.
 
-## Setup
+## Features ✨
 
-1. Install Ruby 3.2.2
+- 📱 Scrapes articles from TLDR Tech (tech, ai, infosec categories)
+- 📖 Generates beautifully formatted EPUB files
+- 📧 Sends HTML emails with article summaries
+- 🖥️ Provides both CLI and API interfaces
+- 📅 Supports custom dates for historical digests
+- 📬 Configurable email recipients
+
+## Installation 🛠️
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/morning-reads.git
+cd morning-reads
+```
+
 2. Install dependencies:
-   ```
-   bundle install
-   ```
-3. Copy `.env.example` to `.env` and fill in your Gmail credentials
-4. Set up the cron job:
-   ```
-   whenever --update-crontab
-   ```
-
-## Usage
-
-### As a Web Service
-
-Run the Sinatra app:
-```
-bundle exec rackup
+```bash
+bundle install
 ```
 
-The service will be available at http://localhost:9292
-
-### As a Command Line Tool
-
-Generate and send morning reads manually:
-```
-bundle exec rake morning_reads:generate
+3. Set up environment variables in `.env`:
+```bash
+GMAIL_USERNAME=your.email@gmail.com
+GMAIL_APP_PASSWORD=your-app-specific-password
 ```
 
-## Features
+Note: You'll need to create an App Password in your Google Account settings. Never use your regular Gmail password.
 
-- Scrapes TLDR articles from tech, AI, and infosec categories
-- Generates a beautifully formatted EPUB file
-- Automatically emails the EPUB file every weekday at 5:00 AM PT
-- Can be run as both a web service and command line tool
+## Usage 🚀
 
-## Deployment
+### Command Line Interface
 
-The app is configured for deployment on Fly.io. Follow their documentation for Ruby deployment.
+Generate and email today's digest:
+```bash
+./bin/morning-reads
+```
+
+Available options:
+```bash
+Options:
+  -d, --date DATE      Date to fetch articles for (YYYY-MM-DD)
+  -s, --skip-email     Skip sending email and save EPUB locally
+  -o, --output-dir DIR Directory to save the EPUB file
+  -e, --email EMAIL    Email address to send to
+  -h, --help          Show this help message
+```
+
+Examples:
+```bash
+# Generate digest for specific date
+./bin/morning-reads --date 2025-01-10
+
+# Save locally without sending email
+./bin/morning-reads --skip-email
+
+# Save to Downloads folder
+./bin/morning-reads --output-dir ~/Downloads
+
+# Send to specific email
+./bin/morning-reads --email user@email.com
+```
+
+### Web API
+
+Start the server:
+```bash
+rake server
+```
+
+Generate and send digest:
+```bash
+# Today's digest
+curl "http://localhost:3000/generate"
+
+# Specific date
+curl "http://localhost:3000/generate?date=2025-01-10"
+
+# Custom email
+curl "http://localhost:3000/generate?email=user@email.com"
+```
+
+## Output Format 📱
+
+### EPUB Structure
+- Cover page with date
+- Table of contents by category
+- Articles organized by category
+- Clickable titles linking to source
+- Clean, modern styling
+
+### Email Format
+- HTML version with styling
+- Plain text fallback
+- Articles organized by category
+- Clickable links
+- EPUB attachment
+
+## Development 🔧
+
+Run the web server:
+```bash
+rake server
+```
+
+The server will be available at `http://localhost:3000`.
+
+## Error Handling ⚠️
+
+The application handles various error cases:
+- Invalid dates
+- Network failures
+- Email sending issues
+- File system errors
+- XML/HTML parsing errors
+
+## Contributing 🤝
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License 📄
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments 🙏
+
+- [TLDR Tech](https://tldr.tech) for providing the source content
+- [GEPUB](https://github.com/skoji/gepub) for EPUB generation
+- [Nokogiri](https://nokogiri.org/) for HTML parsing
+- [Mail](https://github.com/mikel/mail) for email handling
+- [Sinatra](http://sinatrarb.com/) for the web API
