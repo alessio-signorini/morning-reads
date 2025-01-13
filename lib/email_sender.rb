@@ -1,5 +1,5 @@
 require 'mail'
-require 'dotenv/load'
+require 'dotenv/load' if ENV['RACK_ENV'] != 'production'
 
 class EmailSender
   def initialize

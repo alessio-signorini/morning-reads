@@ -1,13 +1,17 @@
 require 'sinatra'
 require 'date'
 require 'json'
+require 'dotenv/load' if ENV['RACK_ENV'] != 'production'
 require_relative 'lib/scrapers/tldr_scraper'
 require_relative 'lib/epub_builder'
 require_relative 'lib/email_sender'
 
 class MorningReadsApp < Sinatra::Base
-  set :port, ENV['PORT'] || 3000
-  set :bind, '0.0.0.0'
+  configure do
+    set :port, ENV['PORT'] || 3000
+    set :bind, '0.0.0.0'
+    set :protection, :except => :host_attack
+  end
 
   get '/' do
     'Morning Reads API is running!'
