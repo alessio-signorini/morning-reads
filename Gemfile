@@ -10,3 +10,5 @@ gem 'mail'
 gem 'whenever'
 gem 'dotenv'
 gem 'rake'
+
+gem "rackup", "~> 2.2"
