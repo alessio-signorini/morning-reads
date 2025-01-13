@@ -1,0 +1,80 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    base64 (0.2.0)
+    bigdecimal (3.1.9)
+    chronic (0.10.2)
+    csv (3.3.2)
+    date (3.4.1)
+    dotenv (3.1.7)
+    gepub (1.0.17)
+      nokogiri (>= 1.8.2, < 2.0)
+      rubyzip (> 1.1.1, < 2.4)
+    httparty (0.22.0)
+      csv
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
+    logger (1.6.5)
+    mail (2.8.1)
+      mini_mime (>= 0.1.1)
+      net-imap
+      net-pop
+      net-smtp
+    mini_mime (1.1.5)
+    multi_xml (0.7.1)
+      bigdecimal (~> 3.1)
+    mustermann (3.0.3)
+      ruby2_keywords (~> 0.0.1)
+    net-imap (0.5.5)
+      date
+      net-protocol
+    net-pop (0.1.2)
+      net-protocol
+    net-protocol (0.2.2)
+      timeout
+    net-smtp (0.5.0)
+      net-protocol
+    nokogiri (1.18.1-arm64-darwin)
+      racc (~> 1.4)
+    racc (1.8.1)
+    rack (3.1.8)
+    rack-protection (4.1.1)
+      base64 (>= 0.1.0)
+      logger (>= 1.6.0)
+      rack (>= 3.0.0, < 4)
+    rack-session (2.1.0)
+      base64 (>= 0.1.0)
+      rack (>= 3.0.0)
+    rake (13.2.1)
+    ruby2_keywords (0.0.5)
+    rubyzip (2.3.2)
+    sinatra (4.1.1)
+      logger (>= 1.6.0)
+      mustermann (~> 3.0)
+      rack (>= 3.0.0, < 4)
+      rack-protection (= 4.1.1)
+      rack-session (>= 2.0.0, < 3)
+      tilt (~> 2.0)
+    tilt (2.5.0)
+    timeout (0.4.3)
+    whenever (1.0.0)
+      chronic (>= 0.6.3)
+
+PLATFORMS
+  arm64-darwin-23
+
+DEPENDENCIES
+  dotenv
+  gepub
+  httparty
+  mail
+  nokogiri
+  rake
+  sinatra
+  whenever
+
+RUBY VERSION
+   ruby 3.2.2p53
+
+BUNDLED WITH
+   2.4.10

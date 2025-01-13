@@ -1,0 +1,85 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'date'
+require 'pathname'
+require_relative '../lib/scrapers/tldr_scraper'
+require_relative '../lib/epub_builder'
+require_relative '../lib/email_sender'
+require 'dotenv/load'
+
+options = {
+  date: Date.today,
+  skip_email: false,
+  output_dir: File.expand_path('../tmp', __dir__),
+  email: 'alessio1@pbsync.com'
+}
+
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: morning-reads [options]"
+
+  opts.on("-d", "--date DATE", "Date to fetch articles for (format: YYYY-MM-DD)") do |date|
+    begin
+      options[:date] = Date.parse(date)
+    rescue Date::Error
+      puts "Error: Invalid date format. Please use YYYY-MM-DD"
+      exit 1
+    end
+  end
+
+  opts.on("-s", "--skip-email", "Skip sending email and save EPUB locally") do
+    options[:skip_email] = true
+  end
+
+  opts.on("-o", "--output-dir DIR", "Directory to save the EPUB file") do |dir|
+    options[:output_dir] = File.expand_path(dir)
+  end
+
+  opts.on("-e", "--email EMAIL", "Email address to send to (default: alessio1@pbsync.com)") do |email|
+    options[:email] = email
+  end
+
+  opts.on("-h", "--help", "Show this help message") do
+    puts opts
+    puts "\nExamples:"
+    opts.separator "\n  Generate and email today's digest:"
+    opts.separator "    morning-reads"
+    opts.separator "\n  Generate digest for specific date:"
+    opts.separator "    morning-reads --date 2025-01-11 --skip-email"
+    opts.separator "\n  Save EPUB to Downloads folder:"
+    opts.separator "    morning-reads --output-dir ~/Downloads"
+    opts.separator "\n  Send EPUB to specific email:"
+    opts.separator "    morning-reads --email user@email.com"
+    exit
+  end
+end
+
+begin
+  parser.parse!
+  date_str = options[:date].strftime('%Y-%m-%d')
+
+  puts "\n📥 Scraping TLDR articles..."
+  scraper = TLDRScraper.new
+  articles = scraper.scrape_all(date_str)
+  puts "  ✓ Found #{articles.length} articles across #{articles.group_by { |a| a[:category] }.keys.join(', ')} categories"
+  
+  puts "\n📚 Generating EPUB file..."
+  epub_builder = EPUBBuilder.new
+  epub_file = epub_builder.build(articles, date_str, options[:output_dir])
+  relative_path = Pathname.new(epub_file).relative_path_from(Pathname.pwd).to_s
+  puts "  ✓ EPUB file generated at #{relative_path}"
+  
+  if options[:skip_email]
+    puts "\n💾 Skipping email sending"
+  else
+    puts "\n📧 Sending email..."
+    email_sender = EmailSender.new
+    email_sender.send_epub(epub_file, date_str, options[:email], articles)
+    puts "  ✓ Email sent successfully to #{options[:email]}"
+  end
+  
+  puts "\n✨ All done! Your morning reads have been #{options[:skip_email] ? 'generated' : 'generated and sent'}."
+rescue => e
+  puts "\n❌ Error: #{e.message}"
+  exit 1
+end
