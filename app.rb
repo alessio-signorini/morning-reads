@@ -10,7 +10,7 @@ class MorningReadsApp < Sinatra::Base
   configure do
     set :port, ENV['PORT'] || 3000
     set :bind, '0.0.0.0'
-    disable :protection  # Disable Rack protection for development
+    set :host_authorization, {:permitted_hosts => []}
   end
 
   get '/' do
