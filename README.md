@@ -74,14 +74,10 @@ Examples:
 
 Start the server:
 ```bash
-# Development
-RACK_ENV=development rake server
-
-# Production
-RACK_ENV=production rake server
+rake server
 ```
 
-The server will be available at `http://localhost:3000`.
+The server will be available at `http://localhost:3000` or `http://127.0.0.1:3000`.
 
 Generate and send digest:
 ```bash
