@@ -1,4 +1,4 @@
-# Morning Reads 📚
+# 📚 Morning Reads
 
 A Ruby application that generates a daily digest of TLDR Tech articles in both EPUB and email formats. Articles are scraped from [tldr.tech](https://tldr.tech) across tech, AI, and infosec categories.
 
